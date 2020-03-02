@@ -1,0 +1,8 @@
+{
+  "appId": "com.mystogan33.pairbnb",
+  "appName": "PairBnB",
+  "bundledWebRuntime": false,
+  "npmClient": "npm",
+  "webDir": "www",
+  "cordova": {}
+}

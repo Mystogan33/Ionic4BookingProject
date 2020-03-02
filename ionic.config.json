@@ -1,5 +1,7 @@
 {
-  "name": "BookingProject",
-  "integrations": {},
+  "name": "PairBnB",
+  "integrations": {
+    "capacitor": {}
+  },
   "type": "angular"
 }

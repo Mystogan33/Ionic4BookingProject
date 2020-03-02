@@ -1,0 +1,72 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{ isLogin ? 'Login': 'Signup' }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <form #form="ngForm" (ngSubmit)="onSubmit(form)">
+    <ion-grid>
+      <ion-row>
+        <ion-col size-sm="6" offset-sm="3" class="ion-padding">
+          <ion-card class="form-card">
+            <ion-list class="ion-padding">
+              <ion-item>
+                <ion-label position="floating">E-Mail</ion-label>
+                <ion-input
+                  type="email"
+                  ngModel
+                  name="email"
+                  required
+                  email
+                  #emailCtrl="ngModel"></ion-input>
+              </ion-item>
+              <ion-item lines="none" *ngIf="!emailCtrl.valid && emailCtrl.touched">
+                <ion-label>
+                  Should be a valid email adress.
+                </ion-label>
+              </ion-item>
+              <ion-item style="margin-top: 1rem;">
+                <ion-label position="floating">Password</ion-label>
+                <ion-input
+                  type="password"
+                  ngModel
+                  name="password"
+                  required
+                  minlength="6"
+                  #passwordCtrl="ngModel"
+                  ></ion-input>
+              </ion-item>
+              <ion-item lines="none" *ngIf="!passwordCtrl.valid && passwordCtrl.touched">
+                <ion-label>
+                  Should be at least 6 characters long.
+                </ion-label>
+              </ion-item>
+            </ion-list>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size-sm="6" offset-sm="3">
+          <ion-button
+            type="button"
+            color="light"
+            fill="clear"
+            expand="block"
+            (click)="onSwitchAuthMode()">
+              Switch to {{ isLogin ? 'Signup': 'Login' }}
+          </ion-button>
+          <ion-button
+            type="submit"
+            color="primary"
+            expand="block"
+            *ngIf="!isLoading"
+            [disabled]="!form.valid">
+            {{ isLogin ? 'Login': 'Signup' }}
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+</ion-content>

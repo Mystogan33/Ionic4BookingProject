@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">PairBnB</string>
+    <string name="title_activity_main">PairBnB</string>
+    <string name="package_name">com.mystogan33.pairbnb</string>
+    <string name="custom_url_scheme">com.mystogan33.pairbnb</string>
+</resources>
