@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
   templateUrl: './auth.page.html',
   styleUrls: ['./auth.page.scss'],
 })
-export class AuthPage implements OnInit {
+export class AuthPage {
   isLoading = false;
   isLogin = true;
 
@@ -20,10 +20,7 @@ export class AuthPage implements OnInit {
     private menuCtrl: MenuController,
     private loadingCtrl: LoadingController,
     private alertCtrl: AlertController
-  ) { }
-
-  ngOnInit() {
-  }
+  ) {}
 
   authenticate(email: string, password: string): boolean {
     this.isLoading = true;
@@ -42,40 +39,42 @@ export class AuthPage implements OnInit {
       this.authService.login(email, password) :
       this.authService.signup(email, password);
 
-      authObs.subscribe(resData => {
-        this.menuCtrl.enable(true, "m1");
-        this.isLoading = false;
-        loadingEl.dismiss();
-        isAuthSuccess = true;
-        this.router.navigateByUrl('/places/tabs/discover');
-      },
-      errRes => {
-        if(errRes) {
-          if(errRes.error.error) {
-            const code = errRes.error.error.message;
-            let message: string;
+      authObs.subscribe(
+        resData => {
+          this.menuCtrl.enable(true, "m1");
+          this.isLoading = false;
+          loadingEl.dismiss();
+          isAuthSuccess = true;
+          this.router.navigateByUrl('/places/tabs/discover');
+        },
+        errRes => {
+          if(errRes) {
+            if(errRes.error.error) {
+              const code = errRes.error.error.message;
+              let message: string;
 
-            switch(code) {
-              case 'EMAIL_EXISTS':
-                message = "This email already exists on our server.";
-                break;
-              case 'EMAIL_NOT_FOUND':
-                message = "This email is not registered on our server.";
-                break;
-              case 'INVALID_PASSWORD':
-                message = "Invalid credientials";
-                break;
-              default:
-                message = "Could not sign you up, please try again.";
+              switch(code) {
+                case 'EMAIL_EXISTS':
+                  message = "This email already exists on our server.";
+                  break;
+                case 'EMAIL_NOT_FOUND':
+                  message = "This email is not registered on our server.";
+                  break;
+                case 'INVALID_PASSWORD':
+                  message = "Invalid credientials";
+                  break;
+                default:
+                  message = "Could not sign you up, please try again.";
+              }
+
+              this.showAlert(message);
+              this.isLoading = false;
+              isAuthSuccess = false;
+              loadingEl.dismiss();
             }
-
-            this.showAlert(message);
-            this.isLoading = false;
-            isAuthSuccess = false;
-            loadingEl.dismiss();
           }
         }
-      });
+    );
     });
 
     return isAuthSuccess;
@@ -86,24 +85,21 @@ export class AuthPage implements OnInit {
   }
 
   onSubmit(form: NgForm) {
-    if(!form.valid) {
-      return;
-    }
+    if(!form.valid) return;
 
-    const [email, password] = [form.value.email, form.value.password];
+    const { email, password } = form.value;
     const isAuthSuccess = this.authenticate(email, password);
 
-    if(isAuthSuccess) {
-      form.reset();
-    }
+    if(isAuthSuccess) form.reset();
   }
 
-  private showAlert(message: string) {
-    this.alertCtrl.create({
+  private async showAlert(message: string) {
+    const alertEl = await this.alertCtrl.create({
       header: 'Authentication failed',
       message,
       buttons: ['Okay']
-    })
-    .then(alertEl => alertEl.present());
+    });
+  
+    alertEl.present();
   }
 }
